@@ -2,7 +2,7 @@ import React from 'react';
 import css from './filter.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from '../../redux/filter/filter-slice';
-import { getFilter } from '../../redux/filter/filter-selectors';
+import { selectFilter } from '../../redux/filter/filter-selectors';
 
 const Filter = () => {
   const onSetFilter = payload => {
@@ -13,7 +13,7 @@ const Filter = () => {
   };
   const dispatch = useDispatch();
 
-  const filter = useSelector(getFilter);
+  const filter = useSelector(selectFilter);
 
   return (
     <div className={css.filter}>

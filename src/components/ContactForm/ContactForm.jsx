@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 const ContactForm = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
-  const [number, setPhone] = useState('');
+  const [phone, setPhone] = useState('');
 
   const contacts = useSelector(selectContacts);
 
