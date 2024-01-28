@@ -5,15 +5,6 @@ import {
   deleteContact,
 } from './contacts-operations';
 
-const handlePending = state => {
-  state.isLoading = true;
-};
-
-const handleRejected = (state, action) => {
-  state.isLoading = false;
-  state.error = action.payload;
-};
-
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
@@ -24,22 +15,49 @@ const contactsSlice = createSlice({
 
   extraReducers: builder => {
     builder
+
+      .addCase(fetchContacts.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchContacts.fulfilled, (state, action) => {
-        state.items = action.payload;
         state.isLoading = false;
+        state.error = null;
+        state.items = action.payload;
+      })
+      .addCase(fetchContacts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(addContact.pending, state => {
+        state.isLoading = true;
       })
       .addCase(addContact.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = null;
         state.items.push(action.payload);
+      })
+      .addCase(addContact.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(deleteContact.pending, state => {
+        state.isLoading = true;
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.items = state.contacts.filter(
-          contact => contact.id !== action.payload.id
+        state.error = null;
+        const index = state.items.findIndex(
+          item => item.id === action.payload.id
         );
+        state.items.splice(index, 1);
       })
-      .addMatcher(action => action.type.endsWith('pending'), handlePending)
-      .addMatcher(action => action.type.endsWith('rejected'), handleRejected);
+      .addCase(deleteContact.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
   },
 });
 
